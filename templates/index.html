@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document Analysis</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f0f2f5;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        header {
+            background: #3861fb;
+            padding: 1rem 0;
+        }
+
+        h1 {
+            color: white;
+            text-align: center;
+            font-size: 1.75rem;
+            font-weight: 500;
+        }
+
+        .main-content {
+            flex: 1;
+            display: flex;
+            padding: 1.5rem;
+            gap: 1.5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .team-info {
+            width: 300px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 1.25rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .team-info h2 {
+            color: #3861fb;
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .team-member {
+            padding: 0.5rem;
+            border-bottom: 1px solid #eee;
+            text-align: center;
+        }
+
+        .team-member:last-child {
+            border-bottom: none;
+        }
+
+        .team-member p {
+            color: #444;
+            font-size: 0.9rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .container {
+            flex: 1;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            height: 100%;
+            justify-content: center;
+        }
+
+        label {
+            font-size: 0.95rem;
+            color: #444;
+            margin-bottom: 0.25rem;
+            display: block;
+        }
+
+        .file-upload {
+            border: 2px dashed #3861fb;
+            border-radius: 8px;
+            padding: 10rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .file-upload:hover {
+            background-color: #f8f9ff;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #3861fb;
+            box-shadow: 0 0 0 2px rgba(56, 97, 251, 0.1);
+        }
+
+        button {
+            background: #3861fb;
+            color: white;
+            padding: 0.75rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        button:hover {
+            background: #2d4fd7;
+        }
+
+        #file-list {
+            margin-top: 0.5rem;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .member-nim {
+            color: #3861fb;
+            font-weight: 500;
+        }
+
+        .member-name {
+            font-weight: 500;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+            .team-info {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Analisis Dokumen</h1>
+    </header>
+
+    <div class="main-content">
+        <div class="team-info">
+            <h2>Tim Pengembang</h2>
+            <div class="team-member">
+                <p>
+                    <span class="member-name">Muhammad Zaki Mahran Mufid</span>
+                    <span class="member-nim">152022145</span>
+                </p>
+            </div>
+            <div class="team-member">
+                <p>
+                    <span class="member-name">Muhammad Hafizi</span>
+                    <span class="member-nim">152022154</span>
+                </p>
+            </div>
+            <div class="team-member">
+                <p>
+                    <span class="member-name">Noval Rizky Nugraha</span>
+                    <span class="member-nim">152022171</span>
+                </p>
+            </div>
+        </div>
+
+        <div class="container">
+            <form action="/analyze" method="POST" enctype="multipart/form-data">
+                <div>
+                    <label for="directory">Pilih Dokumen:</label>
+                    <div class="file-upload" onclick="document.getElementById('directory').click()">
+                        <span>Klik atau seret dokumen ke sini</span>
+                        <input type="file" id="directory" name="documents" multiple required>
+                        <div id="file-list"></div>
+                    </div>
+                </div>
+                
+                <div>
+                    <label for="query">Query Pencarian:</label>
+                    <input type="text" id="query" name="query" required placeholder="Masukkan kata kunci pencarian...">
+                </div>
+                
+                <button type="submit">Mulai Analisis</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('directory').addEventListener('change', function(e) {
+            const fileList = document.getElementById('file-list');
+            fileList.innerHTML = `${e.target.files.length} file dipilih`;
+        });
+    </script>
+</body>
+</html>
